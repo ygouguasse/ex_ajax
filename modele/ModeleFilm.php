@@ -30,5 +30,24 @@ class ModeleFilm {
 
         return $requete;
     }
+
+    public static function ObtenirInfosFilmsParGenre($genre) {
+        $sql = 'SELECT
+                    films.*,
+                    GROUP_CONCAT(genres.nom SEPARATOR ", ") as genres
+                FROM films
+                    INNER JOIN genres_films
+                        ON genres_films.film = films.id
+                    INNER JOIN genres
+                        ON genres.id = genres_films.genre
+                WHERE genres.nom = :genre_nom
+                GROUP BY films.id';
+
+        $requete = BD::ObtenirConnexion()->prepare($sql);
+        $requete->bindparam('genre_nom', $genre, pdo::PARAM_STR);
+        $requete->execute();
+
+        return $requete;
+    }
 }
 ?>

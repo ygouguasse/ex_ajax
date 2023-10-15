@@ -3,6 +3,25 @@ window.addEventListener("load", Initialiser);
 function Initialiser() {
 	document.getElementById("titre").addEventListener("blur", GererBlurDeInputTitre);
 	document.getElementById("titre").addEventListener("keyup", GererKeyUpDeInputTitre);
+	document.getElementById("genre").addEventListener("blur", GererBlurDeInputGenre);
+	document.getElementById("genre").addEventListener("keyup", GererKeyUpDeInputGenre);
+}
+
+function GererBlurDeInputGenre(event) {
+	const genre = event.currentTarget.value;
+	GererModificationDeInputGenre(genre);
+}
+
+function GererKeyUpDeInputGenre(event) {
+	const genre = event.currentTarget.value;
+	if (event.code === "Enter") {
+		GererModificationDeInputGenre(genre);
+		return;
+	}
+}
+
+async function GererModificationDeInputGenre(genre) {
+	ChangerAffichageFilms({"genre": genre});
 }
 
 function GererBlurDeInputTitre(event) {
@@ -19,6 +38,10 @@ function GererKeyUpDeInputTitre(event) {
 }
 
 async function GererModificationDeInputTitre(titre) {
+	ChangerAffichageFilms({"titre": titre})
+}
+
+async function ChangerAffichageFilms(donneesRecherche) {
 	CacherErreur();
 
 	if (titre === "") {
@@ -26,7 +49,7 @@ async function GererModificationDeInputTitre(titre) {
 		return;
 	}
 
-	const films = await ObtenirFilms({"titre": titre});
+	const films = await ObtenirFilms(donneesRecherche);
 	AfficherFilms(films);
 }
 

@@ -24,15 +24,21 @@ function ObtenirFilms() {
 	// On récupère les données qui ont été envoyé dans le body du fetch
 	$_DONNEES = DecoderDonneesJSONRecues();
 	
-	if(empty($_DONNEES["titre"])) {
+	if(empty($_DONNEES["titre"]) && empty($_DONNEES["genre"])) {
 		// Bad request
 		// Donc le reponse.ok dans le JavaScript sera false.
 		// https://developer.mozilla.org/fr/docs/Web/HTTP/Status/400
 		http_response_code(400);
 		return;
 	}
-	
-	$films = ModeleFilm::ObtenirInfosFilmsParTitre($_DONNEES["titre"]);
+
+	if(!empty($_DONNEES["titre"])) {
+		$films = ModeleFilm::ObtenirInfosFilmsParTitre($_DONNEES["titre"]);
+	}
+
+	if(!empty($_DONNEES["genre"])) {
+		$films = ModeleFilm::ObtenirInfosFilmsParGenre($_DONNEES["genre"]);
+	}
 
 	if($films->rowCount() === 0) {
 		// Not Found
